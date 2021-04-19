@@ -1,6 +1,8 @@
 feature 'Viewing bookmarks' do
-  scenario 'visiting the index page' do
-    visit('/')
-    expect(page).to have_content "Bookmark Manager"
+  scenario 'shows bookmarks' do
+    visit('/bookmarks')
+    expect(page).to have_content ("https://www.google.com")
+    expect(page).to have_content ("https://www.youtube.com/")
+    expect(page).to have_content ("https://www.bbc.co.uk/")
   end
 end
