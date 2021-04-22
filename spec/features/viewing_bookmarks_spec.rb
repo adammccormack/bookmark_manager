@@ -2,17 +2,14 @@ require 'pg'
 
 feature 'Viewing bookmarks' do
   scenario 'A user can see bookmarks' do
-    connection = PG.connect(dbname: 'bookmark_manager_test')
-
-    # Add the test data
-    connection.exec("INSERT INTO bookmarks (url) VALUES ('https://www.google.com');")
-    connection.exec("INSERT INTO bookmarks (url) VALUES('https://www.youtube.com/');")
-    connection.exec("INSERT INTO bookmarks (url) VALUES('https://www.bbc.co.uk/');")
+    Bookmark.create(url: 'https://www.google.com', title: 'Google')
+    Bookmark.create(url: 'https://www.youtube.com/', title: 'Youtube')
+    Bookmark.create(url: 'https://www.bbc.co.uk/', title: 'BBC')
 
     visit('/bookmarks')
 
-    expect(page).to have_content 'https://www.google.com'
-    expect(page).to have_content 'https://www.youtube.com/'
-    expect(page).to have_content 'https://www.bbc.co.uk/'
+    expect(page).to have_link('Google', href: 'https://www.google.com')
+    expect(page).to have_link('Youtube', href: 'https://www.youtube.com/')
+    expect(page).to have_link('BBC', href: 'https://www.bbc.co.uk/')
   end
 end
