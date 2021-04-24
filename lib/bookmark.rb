@@ -26,9 +26,11 @@ class Bookmark
     else
       connection = PG.connect(dbname: 'bookmark_manager')
     end
+    # result is a postgres object, and you transform it into a ruby object
     result = connection.exec("INSERT INTO bookmarks (title, url) VALUES('#{title}', '#{url}') RETURNING id, title, url;")
     Bookmark.new(id: result[0]['id'], title: result[0]['title'], url: result[0]['url'])
   end
+
   def self.delete(id:)
     if ENV['ENVIRONMENT'] == 'test'
       connection = PG.connect(dbname: 'bookmark_manager_test') # connect to DB
@@ -36,5 +38,25 @@ class Bookmark
       connection = PG.connect(dbname: 'bookmark_manager')
     end
       connection.exec("DELETE FROM bookmarks WHERE id = #{id}") # use SQL to delete the id given
+  end
+
+  def self.get(id:)
+    if ENV['ENVIRONMENT'] == 'test'
+      connection = PG.connect(dbname: 'bookmark_manager_test') # connect to DB
+    else
+      connection = PG.connect(dbname: 'bookmark_manager')
+    end
+      result = connection.exec("SELECT * FROM bookmarks WHERE id = #{id}")
+      Bookmark.new(id: result[0]['id'], title: result[0]['title'], url: result[0]['url'])
+  end
+
+  def self.update(id:, title:, url:)
+    if ENV['ENVIRONMENT'] == 'test'
+      connection = PG.connect(dbname: 'bookmark_manager_test') # connect to DB
+    else
+      connection = PG.connect(dbname: 'bookmark_manager')
+    end
+      result = connection.exec("SELECT * FROM bookmarks WHERE id = #{id}")
+      Bookmark.new(id: result[0]['id'], title: result[0]['title'], url: result[0]['url'])
   end
 end

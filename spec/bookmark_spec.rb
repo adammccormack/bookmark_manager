@@ -21,7 +21,7 @@ describe Bookmark do
     describe '.create' do
       it 'creates a new bookmark' do
         bookmark = Bookmark.create(url: 'http://www.testbookmark.com', title: 'Test Bookmark')
-        persisted_data = persisted_data(id: bookmark.id) # blue id is pulling this #{id} from persisted_data
+        p persisted_data = persisted_data(id: bookmark.id) # blue id is pulling this #{id} from persisted_data
         expect(bookmark).to be_a Bookmark
         expect(bookmark.id).to eq persisted_data['id']
         expect(bookmark.title).to eq 'Test Bookmark'
@@ -35,6 +35,26 @@ describe Bookmark do
         Bookmark.delete(id: bookmark.id) # delete the above bookmark specifically
 
         expect(Bookmark.all.length).to eq 0
+    end
+  end
+
+  describe '.get' do
+    it 'finds a bookmark' do
+      bookmark = Bookmark.create(url: 'http://www.testbookmark.com', title: 'Test Bookmark')
+      persisted_data = persisted_data(id: bookmark.id)
+      expect(Bookmark.get(id: persisted_data['id']).url).to eq 'http://www.testbookmark.com'
+      expect(Bookmark.get(id: persisted_data['id']).title).to eq 'Test Bookmark'
+    end
+  end
+
+  describe '.update' do
+    it 'updates a bookmark' do
+      bookmark = Bookmark.create(url: 'http://www.testbookmark.com', title: 'Test Bookmark')
+      persisted_data = persisted_data(id: bookmark.id)
+      test = Bookmark.get(id: persisted_data['id'])
+      Bookmark.update(id: test.id, title: 'test title', url: 'www.testtitle.com')
+      expect(Bookmark.get(id: persisted_data['id']).url).to eq 'www.testtitle.com'
+      expect(Bookmark.get(id: persisted_data['id']).title).to eq 'test title'
     end
   end
 end
