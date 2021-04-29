@@ -1,11 +1,10 @@
 require 'bookmark'
 require 'database_helpers'
+require 'pg'
 
 describe Bookmark do
     describe '.all' do
       it 'returns all bookmarks' do
-        connection = PG.connect(dbname: 'bookmark_manager_test')
-
         bookmark = Bookmark.create(url: 'https://www.google.com', title: 'Google')
         Bookmark.create(url: 'https://www.youtube.com/', title: 'Youtube')
         Bookmark.create(url: 'https://www.bbc.co.uk/', title: 'BBC')
@@ -21,7 +20,7 @@ describe Bookmark do
     describe '.create' do
       it 'creates a new bookmark' do
         bookmark = Bookmark.create(url: 'http://www.testbookmark.com', title: 'Test Bookmark')
-        p persisted_data = persisted_data(id: bookmark.id) # blue id is pulling this #{id} from persisted_data
+        persisted_data = persisted_data(id: bookmark.id) # blue id is pulling this #{id} from persisted_data
         expect(bookmark).to be_a Bookmark
         expect(bookmark.id).to eq persisted_data['id']
         expect(bookmark.title).to eq 'Test Bookmark'
@@ -39,22 +38,23 @@ describe Bookmark do
   end
 
   describe '.get' do
-    it 'finds a bookmark' do
-      bookmark = Bookmark.create(url: 'http://www.testbookmark.com', title: 'Test Bookmark')
-      persisted_data = persisted_data(id: bookmark.id)
-      expect(Bookmark.get(id: persisted_data['id']).url).to eq 'http://www.testbookmark.com'
-      expect(Bookmark.get(id: persisted_data['id']).title).to eq 'Test Bookmark'
+    it 'it returns the requested bookmark' do
+      bookmark = Bookmark.create(url: 'http://www.youcantfindme.com', title: 'F ME')
+      result = Bookmark.get(id: bookmark.id)
+      expect(result.id).to eq bookmark.id
+      expect(result.url).to eq 'http://www.youcantfindme.com'
+      expect(result.title).to eq 'F ME'
     end
   end
 
   describe '.update' do
     it 'updates a bookmark' do
       bookmark = Bookmark.create(url: 'http://www.testbookmark.com', title: 'Test Bookmark')
-      persisted_data = persisted_data(id: bookmark.id)
-      test = Bookmark.get(id: persisted_data['id'])
-      Bookmark.update(id: test.id, title: 'test title', url: 'www.testtitle.com')
-      expect(Bookmark.get(id: persisted_data['id']).url).to eq 'www.testtitle.com'
-      expect(Bookmark.get(id: persisted_data['id']).title).to eq 'test title'
+      updated_bookmark = Bookmark.update(id: bookmark.id, url: 'http://mofo.com', title: 'MOFO')
+
+      expect(updated_bookmark.id).to eq bookmark.id
+      expect(updated_bookmark.url).to eq 'http://mofo.com'
+      expect(updated_bookmark.title).to eq 'MOFO'
     end
   end
 end
