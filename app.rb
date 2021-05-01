@@ -12,11 +12,10 @@ class BookmarkManager < Sinatra::Base
 
   configure :development do
     register Sinatra::Reloader
-
   end
 
   get '/' do
-    @bookmarks
+      'Bookmark Manager'
     erb :index
   end
 
@@ -33,7 +32,7 @@ class BookmarkManager < Sinatra::Base
     if params['url'] =~ /\A#{URI::regexp(['http', 'https'])}\z/
       Bookmark.create(url: params[:url], title: params[:title])
     else
-      flash[:notice] = "You must submit a valid URl."
+      flash[:notice] = "You must submit a valid URL." unless Bookmark.create(url: params[:url], title: params[:title])
       redirect '/bookmarks/new'
     end
     redirect '/bookmarks'

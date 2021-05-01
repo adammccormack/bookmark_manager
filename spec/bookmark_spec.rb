@@ -26,7 +26,13 @@ describe Bookmark do
         expect(bookmark.title).to eq 'Test Bookmark'
         expect(bookmark.url).to eq 'http://www.testbookmark.com'
       end
+
+      it 'does not create a new bookmark if the URL is not valid' do
+        bookmark = Bookmark.create(url: 'not a bookmark', title: 'Nada')
+        expect(Bookmark.all).to be_empty
+      end
     end
+
     describe '.delete' do
       it 'deletes the given bookmark' do
         bookmark = Bookmark.create(title: 'Google.com', url: 'https://www.google.com')
