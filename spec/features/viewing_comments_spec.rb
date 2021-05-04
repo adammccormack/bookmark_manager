@@ -8,9 +8,9 @@ feature 'view comments' do
     expect(current_path).to eq "/bookmarks/#{bookmark.id}/comments/new"
 
     fill_in 'comment', with: 'Dis be a comment yo'
-    click_button 'Submit'
+    click_button 'Add Comment'
 
     expect(current_path).to eq '/bookmarks'
-    expect(page).to have_content 'Dis be a comment yo'
+    expect(first('.bookmark')).to have_content 'Dis be a comment yo'
   end
 end

@@ -13,12 +13,11 @@
         <input type='hidden' name='_method' value='DELETE'/>
         <input type="submit" value="Delete" />
       </form>
+
+      <form action="/bookmarks/<%= bookmark.id %>/comments/new" method="post">
+        <input type="submit" value="Add Comment" />
+      </form>
     </li>
-    <ul>
-      <% bookmark.comments.each do |comment| %>
-      <li><%= comment['text'] %></li>
-      <% end %>
-    </ul>
   <% end %>
 </ul>
 <br>

@@ -60,8 +60,8 @@ class BookmarkManager < Sinatra::Base
   end
 
   post '/bookmarks/:id/comments/new' do
-    @bookmark = params[:id]
-    erb :comments
+    @bookmark_id = params[:id]
+    erb :'comments'
   end
 
 
