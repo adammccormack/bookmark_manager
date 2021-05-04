@@ -3,6 +3,7 @@ require 'database_helpers'
 require 'pg'
 
 describe Bookmark do
+  let(:comment_class) { double(:comment_class) }
     describe '.all' do
       it 'returns all bookmarks' do
         bookmark = Bookmark.create(url: 'https://www.google.com', title: 'Google')
@@ -72,6 +73,6 @@ describe Bookmark do
       comment = bookmark.comments.first
 
       expect(comment['text']).to eq 'Test comment'
-    end
   end
+end
 end
